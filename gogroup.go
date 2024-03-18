@@ -3,6 +3,7 @@ package xgroup
 import (
 	"context"
 	"fmt"
+	"runtime/debug"
 	"sync"
 )
 
@@ -45,7 +46,7 @@ func (g *Group) Go(f func() error) {
 	go func() {
 		defer func() {
 			if err := recover(); err != nil {
-				g.err = fmt.Errorf(`gogroup go has happened error:%v`, err)
+				g.err = fmt.Errorf("gogroup go has happened error: %v. \nStack: %v", err, string(debug.Stack()))
 			}
 			g.done()
 		}()
